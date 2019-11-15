@@ -1,116 +1,170 @@
+#  © Shahram Talei @ 2019 The University of Alabama - All rights reserved.
+#you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation; either version 3 of the License, or
+#(at your option) any later version.
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.legend_handler import HandlerLine2D
 import seaborn as sns
+from mpl_toolkits.mplot3d import Axes3D
+import argparse
 
-########################################################### Data source
-# logy for subhalo distplot
-# MWish MMasive
+plt.rcParams["font.size"] =12
 
-dg=np.genfromtxt('halos_0.0_G.ascii', skip_header=18)#,names=True, skip_header=5)
-dc=np.genfromtxt('halos_0.0_C.ascii',skip_header=18)#names=True, skip_header=5)
-dc0=np.genfromtxt('halos_0.0_C0.ascii',skip_header=18)#names=True, skip_header=5)
-
-
-IDG=np.array(dg[:,0])
-IDC=np.array(dc[:,0])
-IDC0=np.array(dc0[:,0])
-
-NumG=np.array(dg[:,1])
-NumC=np.array(dc[:,1])
-NumC0=np.array(dc0[:,1])
+def PlotShpere(ax,R,xc,yc,zc):
+	u, v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
+	x = xc+(R/1000.)*np.cos(u)*np.sin(v)
+	y = yc+(R/1000.)*np.sin(u)*np.sin(v)
+	z = zc+(R/1000.)*np.cos(v)
+	ax.plot_wireframe(x, y, z, color="gray",alpha=0.3)
 
 
-#print len(dc[:,2])-len(dg[:,2]) # mvir
-Mg=np.array(dg[:,2])
-Mc=np.array(dc[:,2])
-Mc0=np.array(dc0[:,2])
+#how to run: python SelectHalo.py halo_catalog_1 halo_catalog_2 num_limit_for_dwarfs M_target_max M_target_min M_dwarf
+#example: $python distributions.py halos_0.0_G.ascii halos_0.0_C.ascii 250 1.3e12 1.1e12 1.0e8
 
-MglogAll=np.array(np.log10(dg[:,2]))
-MclogAll=np.array(np.log10(dc[:,2]))
-Mc0logAll=np.array(np.log10(dc0[:,2]))
-
-#MglogAll=np.array(dg[:,2])
-#MclogAll=np.array(dc[:,2])
-#Mc0logAll=np.array(dc0[:,2])
-
-
-Xg=np.array(dg[:,8])
-Yg=np.array(dg[:,9])
-Zg=np.array(dg[:,10])
-
-Xc=np.array(dc[:,8])
-Yc=np.array(dc[:,9])
-Zc=np.array(dc[:,10])
-
-Xc0=np.array(dc0[:,8])
-Yc0=np.array(dc0[:,9])
-Zc0=np.array(dc0[:,10])
-
-
-RVirg=np.array(dg[:,4])
-RVirc=np.array(dc[:,4])
-RVirc0=np.array(dc0[:,4])
-
-## Criterias
-
-MHL=1.0e12
-DHL=1.0e8
-ProbeRadius=0.3 # kpc -> Mpc
-NumLimit=100
-nbins=30
-nbins2=50
-## Mass Sample
-
-Mglog=MglogAll[NumG>NumLimit]
-Mclog=MclogAll[NumC>NumLimit]
-Mc0log=Mc0logAll[NumC0>NumLimit]
-
-
-MMassiveG=Mg[Mg>MHL]
-XMassiveG=Xg[Mg>MHL]
-YMassiveG=Yg[Mg>MHL]
-ZMassiveG=Zg[Mg>MHL]
-RvirMassiveG=RVirg[Mg>MHL]
-
-MMassiveC=Mc[Mc>MHL]
-XMassiveC=Xc[Mc>MHL]
-YMassiveC=Yc[Mc>MHL]
-ZMassiveC=Zc[Mc>MHL]
-RvirMassiveC=RVirc[Mc>MHL]
-
-MMassiveC0=Mc0[Mc0>MHL]
-XMassiveC0=Xc0[Mc0>MHL]
-YMassiveC0=Yc0[Mc0>MHL]
-ZMassiveC0=Zc0[Mc0>MHL]
-RvirMassiveC0=RVirc0[Mc0>MHL]
-
-
-
-rMassiveG=np.sqrt(XMassiveG**2.+YMassiveG**2.+ZMassiveG**2.)
-rMassiveC=np.sqrt(XMassiveC**2.+YMassiveC**2.+ZMassiveC**2.)
-rMassiveC0=np.sqrt(XMassiveC0**2.+YMassiveC0**2.+ZMassiveC0**2.)
-
-print("Min # of particles in a halo is:", NumLimit )
-
-print("No of halos above", "%.4g"%MHL,"is:")
-print("Gadget:",len(MMassiveG))
-print("NoDisk:",len(MMassiveC0))
-print("CoSANG:",len(MMassiveC))
-
-
-#print XMassiveG
-
-NumDwarfG=NumG[Mg<DHL]
-NumDwarfC0=NumC0[Mc0<DHL]
-NumDwarfC=NumC[Mc<DHL]
-
-Mg2=Mg[Mg<DHL]
-print(len(Mg2))
-MDwarfG_test=Mg2[NumDwarfG>NumLimit]
-print(len(MDwarfG_test))
-###############
-
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("HaloCatalogG",type=str)
+    parser.add_argument("HaloCatalogC",type=str)
+    parser.add_argument("NumLimit", type=int)
+    parser.add_argument("M_highLim", type=float)
+    parser.add_argument("M_lowLim", type=float)
+    parser.add_argument("M_DwarfLim", type=float)
+	args = parser.parse_args()
+    dg=np.genfromtxt(args.HaloCatalogG, skip_header=18)#,names=True, skip_header=5)
+    dc=np.genfromtxt(args.HaloCatalogC,skip_header=18)#names=True, skip_header=5)
+    IDGAll=np.array(dg[:,0])
+    IDCAll=np.array(dc[:,0])
+    NumGAll=np.array(dg[:,1])
+    NumCAll=np.array(dc[:,1])
+    #print len(dc[:,2])-len(dg[:,2]) # mvir
+    MgAll=np.array(dg[:,2])
+    McAll=np.array(dc[:,2])
+    XgAll=np.array(dg[:,8])
+    YgAll=np.array(dg[:,9])
+    ZgAll=np.array(dg[:,10])
+    XcAll=np.array(dc[:,8])
+    YcAll=np.array(dc[:,9])
+    ZcAll=np.array(dc[:,10])
+    RvGAll=np.array(dg[:,4])
+    RvCAll=np.array(dc[:,4])
+    ## Criterias
+    MHaloHigh=args.M_highLim
+    MHaloLow=args.M_lowLim
+    ProbeRadius=0.3 # kpc -> Mpc
+    NLim=args.NumLimit
+    nbins=30
+    nbins2=50
+    ## Mass Sample
+    MG=MgAll[NumGAll>NLim]
+    MC=McAll[NumCAll>NLim]
+    XG=XgAll[NumGAll>NLim]
+    YG=YgAll[NumGAll>NLim]
+    ZG=ZgAll[NumGAll>NLim]
+    XC=XcAll[NumCAll>NLim]
+    YC=YcAll[NumCAll>NLim]
+    ZC=ZcAll[NumCAll>NLim]
+    RvG=RvGAll[NumGAll>NLim]
+    RvC=RvCAll[NumCAll>NLim]
+    IDG=IDGAll[NumGAll>NLim]
+    IDC=IDCAll[NumCAll>NLim]
+    #Find target halos
+    IDHaloG=IDG[(MG>MHaloLow & MG<MHaloHigh)]
+    MHaloG=MG[(MG>MHaloLow & MG<MHaloHigh)]
+    XHaloG=XG[(MG>MHaloLow & MG<MHaloHigh)]
+    YHaloG=YG[(MG>MHaloLow & MG<MHaloHigh)]
+    ZHaloG=ZG[(MG>MHaloLow & MG<MHaloHigh)]
+    RvHaloG=RvG[(MG>MHaloLow & MG<MHaloHigh)]
+    IDHaloC=IDC[(MC>MHaloLow & MC<MHaloHigh)]
+    MHaloC=MC[(MC>MHaloLow & MC<MHaloHigh)]
+    XHaloC=XC[(MC>MHaloLow & MC<MHaloHigh)]
+    YHaloC=YC[(MC>MHaloLow & MC<MHaloHigh)]
+    ZHaloC=ZC[(MC>MHaloLow & MC<MHaloHigh)]
+    RvHaloC=RvC[(MC>MHaloLow & MC<MHaloHigh)]
+    #print some info
+    print("No of the main halos:")
+    print("Gadget:",len(MMassiveG))
+    print("CoSANG:",len(MMassiveC))
+    #let's find the most massive halo in the given range:
+    MMG_index=np.argmax(MHaloG)
+    MMC_index=np.argmax(MHaloC)
+    #Now let's extract the dwarfs
+    IDDwarfG=IDG[(MG>MHaloLow & MG<MHaloHigh)]
+    MDwarfG=MG[MG<MHaloHigh]
+    XDwarfG=XG[MG<MHaloHigh]
+    YDwarfG=YG[MG<MHaloHigh]
+    ZDwarfG=ZG[MG<MHaloHigh]
+    RvDwarfG=RvG[MG<MHaloHigh]
+    IDDwarfC=IDC[MC<MHaloHigh]
+    MDwarfC=MC[MC<MHaloHigh]
+    XDwarfC=XC[MC<MHaloHigh]
+    YDwarfC=YC[MC<MHaloHigh]
+    ZDwarfC=ZC[MC<MHaloHigh]
+    RvDwarfC=RvC[MC<MHaloHigh]
+    ###############
+    # Let's do analysis for the most massive halo first
+    XHG=XHaloG[MMG_index]
+    YHG=YHaloG[MMG_index]
+    ZHG=ZHaloG[MMG_index]
+    RvHG=RvHaloG[MMG_index]
+    XHC=XHaloC[MMC_index]
+    YHC=YHaloC[MMC_index]
+    ZHC=ZHaloC[MMC_index]
+    RvHC=RvHaloC[MMC_index]
+    #let's plot these
+    fig = plt.figure(1)
+    fig.suptitle('CoSANG vs N-Body ')
+    ax11 = fig.add_subplot(221)
+    ax12 = fig.add_subplot(222)
+    ax13 = fig.add_subplot(223)
+    ax14 = fig.add_subplot(224)
+    ax11.set_xlabel('X')
+    ax11.set_ylabel('Y')
+    ax11.set_title('Dwarfs Distribution G')
+    ax12.set_xlabel('X')
+    ax12.set_ylabel('Y')
+    ax12.set_title('Dwarfs Distribution C')
+    ax13.set_xlabel('X')
+    ax13.set_ylabel('Z')
+    ax13.set_title('Dwarfs Distribution G')
+    ax14.set_xlabel('X')
+    ax14.set_ylabel('Z')
+    ax14.set_title('Dwarfs Distribution C')
+    ax11.plot(XHG,YHG,c='black', alpha=0.6, marker='.',s=RvHG)
+    ax12.plot(XHC,YHC,c='black', alpha=0.6, marker='.',s=RvHC)
+    ax13.plot(XHG,ZHG,c='black', alpha=0.6, marker='.',s=RvHG)
+    ax14.plot(XHC,ZHC,c='black', alpha=0.6, marker='.',s=RvHC)
+    rHDwarfsG=np.sqrt((XDwarfG-XHG)**2.0+(YDwarfG-YHG)**2.0+(ZDwarfG-ZHG)**2.0)
+    rHDwarfsC=np.sqrt((XDwarfC-XHC)**2.0+(YDwarfC-YHC)**2.0+(ZDwarfC-ZHC)**2.0)
+    xg1=XDwarfG[rHDwarfsG<RvHG]
+    yg1=YDwarfG[rHDwarfsG<RvHG]
+    zg1=ZDwarfG[rHDwarfsG<RvHG]
+    mg1=MDwarfG[rHDwarfsG<RvHG]
+    xc1=XDwarfC[rHDwarfsC<RvHC]
+    yc1=YDwarfC[rHDwarfsC<RvHC]
+    zc1=ZDwarfC[rHDwarfsC<RvHC]
+    mc1=MDwarfC[rHDwarfsC<RvHC]
+    ax11.plot(xg1,yg1,c='red', alpha=0.8, marker='.',s=5)
+    ax12.plot(xc1,yc1,c='red', alpha=0.8, marker='.',s=5)
+    ax13.plot(xg1,zg1,c='red', alpha=0.8, marker='.',s=5)
+    ax14.plot(xc1,zc1,c='red', alpha=0.8, marker='.',s=5)
+    #histogram of aboundances
+    fig2 = plt.figure(2)
+    fig2.suptitle('CoSANG vs N-Body ')
+    ax2 = fig.add_subplot(111)
+    ax2.set_xlabel('$Log (M_{halo})$')
+    ax2.set_ylabel('$N$')
+    ax2.set_title('Dwarf Halos Mass aboundance')
+    #ax1.plot(d1['star_age'],d1['center h1']) #plot of main data
+    ax2.hist(np.log10(mg1),linewidth=2, bins=nbins, log=False, histtype='step', alpha=0.9,color='blue',label='Gadget')
+    ax2.hist(np.log10(mc1),linewidth=2,bins=nbins,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
+    ax1.legend(loc=2)
+    #We are done with the most massive halo, now let's look at all massive halos
+    
 MG2=Mg[Mg<DHL]
 XG2=Xg[Mg<DHL]
 YG2=Yg[Mg<DHL]
