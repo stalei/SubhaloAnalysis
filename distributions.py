@@ -105,6 +105,11 @@ if __name__ == "__main__":
     YDwarfC=YC[MC<MHaloHigh]
     ZDwarfC=ZC[MC<MHaloHigh]
     RvDwarfC=RvC[MC<MHaloHigh]
+    #print len(MDwarfG)
+    #print("No of halos belove %.4g"%DHL,"is:")
+    #print("Gadget:",len(MDwarfG))
+    #print("NoDisk:",len(MDwarfC0))
+    #print("CoSANG:",len(MDwarfC))
     ###############
     # Let's do analysis for the most massive halo first
     XHG=XHaloG[MMG_index]
@@ -164,63 +169,10 @@ if __name__ == "__main__":
     ax2.hist(np.log10(mc1),linewidth=2,bins=nbins,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
     ax1.legend(loc=2)
     #We are done with the most massive halo, now let's look at all massive halos
-    
-MG2=Mg[Mg<DHL]
-XG2=Xg[Mg<DHL]
-YG2=Yg[Mg<DHL]
-ZG2=Zg[Mg<DHL]
-RVirG2=RVirg[Mg<DHL]
-
-MC2=Mc[Mc<DHL]
-XC2=Xc[Mc<DHL]
-YC2=Yc[Mc<DHL]
-ZC2=Zc[Mc<DHL]
-RVirC2=RVirc[Mc<DHL]
+    plt.show()
 
 
-MC02=Mc0[Mc0<DHL]
-XC02=Xc0[Mc0<DHL]
-YC02=Yc0[Mc0<DHL]
-ZC02=Zc0[Mc0<DHL]
-RVirC02=RVirc0[Mc0<DHL]
-
-
-###############
-
-
-MDwarfG=MG2[NumDwarfG>NumLimit]
-XDwarfG=XG2[NumDwarfG>NumLimit]
-YDwarfG=YG2[NumDwarfG>NumLimit]
-ZDwarfG=ZG2[NumDwarfG>NumLimit]
-RvirDwarfG=RVirG2[NumDwarfG>NumLimit]
-
-MDwarfC=MC2[NumDwarfC>NumLimit]
-XDwarfC=XC2[NumDwarfC>NumLimit]
-YDwarfC=YC2[NumDwarfC>NumLimit]
-ZDwarfC=ZC2[NumDwarfC>NumLimit]
-RvirDwarfC=RVirC2[NumDwarfC>NumLimit]
-
-
-
-MDwarfC0=MC02[NumDwarfC0>NumLimit]
-XDwarfC0=XC02[NumDwarfC0>NumLimit]
-YDwarfC0=YC02[NumDwarfC0>NumLimit]
-ZDwarfC0=ZC02[NumDwarfC0>NumLimit]
-RvirDwarfC0=RVirC02[NumDwarfC0>NumLimit]
-
-
-rDwarfG=np.sqrt(XDwarfG**2.+YDwarfG**2.+ZDwarfG**2.)
-rDwarfC=np.sqrt(XDwarfC**2.+YDwarfC**2.+ZDwarfC**2.)
-rDwarfC0=np.sqrt(XDwarfC0**2.+YDwarfC0**2.+ZDwarfC0**2.)
-
-
-#print len(MDwarfG)
-print("No of halos belove %.4g"%DHL,"is:")
-print("Gadget:",len(MDwarfG))
-print("NoDisk:",len(MDwarfC0))
-print("CoSANG:",len(MDwarfC))
-
-
+'''
 
 #### Find most massive halo
 MMG_index=np.argmin(MMassiveG)
@@ -238,51 +190,11 @@ print("NoDisk=%.4g"%MMassiveC0[MMC0_index],"solar mass & coordinates:",XMassiveC
 print("CoSANG=%.4g"%MMassiveC[MMC_index],"solar mass & coordinates:",XMassiveC[MMC_index],",",YMassiveC[MMC_index],",",ZMassiveC[MMC_index])
 
 
-delrG=np.sqrt((XDwarfG-XMassiveG[MMG_index])**2.+(YDwarfG-YMassiveG[MMG_index])**2.+(ZDwarfG-ZMassiveG[MMG_index])**2.)
-delrC=np.sqrt((XDwarfC-XMassiveC[MMC_index])**2.+(YDwarfC-YMassiveC[MMC_index])**2.+(ZDwarfC-ZMassiveC[MMC_index])**2.)
-delrC0=np.sqrt((XDwarfC0-XMassiveC0[MMC0_index])**2.+(YDwarfC0-YMassiveC0[MMC0_index])**2.+(ZDwarfC0-ZMassiveC0[MMC0_index])**2.)
-
-rSampleG=1000.0*delrG[delrG<ProbeRadius]
-rSampleC=1000.0*delrC[delrC<ProbeRadius]
-rSampleC0=1000.0*delrC0[delrC0<ProbeRadius]
-
-#massSampleG=MDwarfG[delrG<ProbeRadius]
-#massSampleC=MDwarfG[delrC<ProbeRadius]
-#massSampleC0=MDwarfG[delrC0<ProbeRadius]
-
-print("Sample size:")
-#print(len(rSampleG),len(massSampleG))
-print(len(rSampleG),len(delrG))
-
-
-
-#rSampleG=[]
-#rSampleC=[]
-#rSampleC0=[]
-
-#for rmg in rDwarfG:
-#	delrG=np.abs(rMg-rmg)
-#	if delrG<ProbeRadius:
-#		rSampleG.append(1000.*delrG)
-
-
-#for rmc in rDwarfC:
-#	delrC=np.abs(rMc-rmc)
-#	if delrC<ProbeRadius:
-#		rSampleC.append(1000.*delrC)
-
-#delrG=np.abs(rMassiveG-rDwarfG)
-#delrC=np.abs(rMassiveC-rDwarfC)
-
-#rSampleG=delr[delrG<ProbeRadius]
-#rSampleC=delr[delrC<ProbeRadius]
-
 print("No of sattelites closer than",ProbeRadius*1000," kpc is:")
 print("Gadget:",len(rSampleG))
 print("NoDisk:",len(rSampleC0))
 print("CoSANG:",len(rSampleC))
 
-#print len(rSampleC)
 
 
 ########################################################## plots
@@ -299,18 +211,7 @@ ax1.hist(np.log10(MDwarfC0),linewidth=2,bins=nbins,log=False, histtype='step', a
 ax1.hist(np.log10(MDwarfC),linewidth=2,bins=nbins,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
 
 ax1.legend(loc=2)
-#line1, = ax1.plot(np.log10(d1['rvir']),d1['mvir'],linestyle='--', label='7$M_{\odot}$') # first extra plot for legend
 
-#line2, = ax1.plot(np.log10(d2['star_age']),d2['log_R'],linestyle=':',label='8$M_{\odot}$') # second extra plot for legend
-
-#line3, = ax1.plot(np.log10(d3['star_age']),d3['log_R'],linestyle='-.',label='9$M_{\odot}$') # second extra plot for legend
-#line4, = ax1.plot(np.log10(d4['star_age']),d4['log_R'],linestyle='-',label='11$M_{\odot}$')
-
-#line5, = ax1.plot(np.log10(d1['star_age']),d1['log_cntr_T'],linestyle='--', label='7$M_{\odot}$')
-
-
-#ax1.legend(handler_map={line1: HandlerLine2D(numpoints=4)})
- # first extra plot for legend
 
 #########################################################
 ax2 = fig.add_subplot(222)
@@ -358,20 +259,6 @@ ax4.set_title('Subhalo Distribution')
 colors=['grey','black']
 labels=['CoSANG','NoDisk']
 
-#binsc[binsc%2==1]
-#ax4_x=np.linspace(0,ProbeRadius*1000,400)
-#ax4.plot( ax4_x, nc/ng, '+')
-#ax4.plot( nc/ng, 'k.')
-#ng2=ng[ng>0]
-#nc2=nc[ng>0]
-#nc02=nc0[ng>0]
-#line1,= ax4.plot(nc2/ng2,'k+',label='nc/ng')
-#line2,= ax4.plot(nc02/ng2,'ko', label='nc0/ng')
-#ax4.plot(np.log10(ng2/nc2),'r')
-
-#line1,=ax4.plot(np.log10(rSampleG),np.log10(massSampleG) ,linewidth=2)
-
-#ax4.legend(handler_map={line1: HandlerLine2D(numpoints=4)})
 
 #######################################################
 fig2 = plt.figure(2)
@@ -388,3 +275,4 @@ sns.distplot(np.log10(MDwarfG), hist = False, kde = True,kde_kws = {'linewidth':
 
 ###########################
 plt.show()
+'''
