@@ -13,7 +13,7 @@ import seaborn as sns
 from mpl_toolkits.mplot3d import Axes3D
 import argparse
 
-plt.rcParams["font.size"] =12
+plt.rcParams["font.size"] =10
 
 def PlotShpere(ax,R,xc,yc,zc):
 	u, v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     parser.add_argument("M_highLim", type=float)
     parser.add_argument("M_lowLim", type=float)
     parser.add_argument("M_DwarfLim", type=float)
-	args = parser.parse_args()
+    args = parser.parse_args()
     dg=np.genfromtxt(args.HaloCatalogG, skip_header=18)#,names=True, skip_header=5)
     dc=np.genfromtxt(args.HaloCatalogC,skip_header=18)#names=True, skip_header=5)
     IDGAll=np.array(dg[:,0])
@@ -57,6 +57,7 @@ if __name__ == "__main__":
     MHaloLow=args.M_lowLim
     ProbeRadius=0.3 # kpc -> Mpc
     NLim=args.NumLimit
+    MDLim=args.M_DwarfLim
     nbins=30
     nbins2=50
     ## Mass Sample
@@ -73,38 +74,38 @@ if __name__ == "__main__":
     IDG=IDGAll[NumGAll>NLim]
     IDC=IDCAll[NumCAll>NLim]
     #Find target halos
-    IDHaloG=IDG[(MG>MHaloLow & MG<MHaloHigh)]
-    MHaloG=MG[(MG>MHaloLow & MG<MHaloHigh)]
-    XHaloG=XG[(MG>MHaloLow & MG<MHaloHigh)]
-    YHaloG=YG[(MG>MHaloLow & MG<MHaloHigh)]
-    ZHaloG=ZG[(MG>MHaloLow & MG<MHaloHigh)]
-    RvHaloG=RvG[(MG>MHaloLow & MG<MHaloHigh)]
-    IDHaloC=IDC[(MC>MHaloLow & MC<MHaloHigh)]
-    MHaloC=MC[(MC>MHaloLow & MC<MHaloHigh)]
-    XHaloC=XC[(MC>MHaloLow & MC<MHaloHigh)]
-    YHaloC=YC[(MC>MHaloLow & MC<MHaloHigh)]
-    ZHaloC=ZC[(MC>MHaloLow & MC<MHaloHigh)]
-    RvHaloC=RvC[(MC>MHaloLow & MC<MHaloHigh)]
+    IDHaloG=IDG[(MG>MHaloLow) & (MG<MHaloHigh)]
+    MHaloG=MG[(MG>MHaloLow) & (MG<MHaloHigh)]
+    XHaloG=XG[(MG>MHaloLow) & (MG<MHaloHigh)]
+    YHaloG=YG[(MG>MHaloLow) & (MG<MHaloHigh)]
+    ZHaloG=ZG[(MG>MHaloLow) & (MG<MHaloHigh)]
+    RvHaloG=RvG[(MG>MHaloLow) & (MG<MHaloHigh)]
+    IDHaloC=IDC[(MC>MHaloLow) & (MC<MHaloHigh)]
+    MHaloC=MC[(MC>MHaloLow) & (MC<MHaloHigh)]
+    XHaloC=XC[(MC>MHaloLow) & (MC<MHaloHigh)]
+    YHaloC=YC[(MC>MHaloLow) & (MC<MHaloHigh)]
+    ZHaloC=ZC[(MC>MHaloLow) & (MC<MHaloHigh)]
+    RvHaloC=RvC[(MC>MHaloLow) & (MC<MHaloHigh)]
     #print some info
     print("No of the main halos:")
-    print("Gadget:",len(MMassiveG))
-    print("CoSANG:",len(MMassiveC))
+    print("Gadget:",len(MHaloG))
+    print("CoSANG:",len(MHaloC))
     #let's find the most massive halo in the given range:
     MMG_index=np.argmax(MHaloG)
     MMC_index=np.argmax(MHaloC)
     #Now let's extract the dwarfs
-    IDDwarfG=IDG[(MG>MHaloLow & MG<MHaloHigh)]
-    MDwarfG=MG[MG<MHaloHigh]
-    XDwarfG=XG[MG<MHaloHigh]
-    YDwarfG=YG[MG<MHaloHigh]
-    ZDwarfG=ZG[MG<MHaloHigh]
-    RvDwarfG=RvG[MG<MHaloHigh]
-    IDDwarfC=IDC[MC<MHaloHigh]
-    MDwarfC=MC[MC<MHaloHigh]
-    XDwarfC=XC[MC<MHaloHigh]
-    YDwarfC=YC[MC<MHaloHigh]
-    ZDwarfC=ZC[MC<MHaloHigh]
-    RvDwarfC=RvC[MC<MHaloHigh]
+    IDDwarfG=IDG[MG<MDLim]
+    MDwarfG=MG[MG<MDLim]
+    XDwarfG=XG[MG<MDLim]
+    YDwarfG=YG[MG<MDLim]
+    ZDwarfG=ZG[MG<MDLim]
+    RvDwarfG=RvG[MG<MDLim]
+    IDDwarfC=IDC[MC<MDLim]
+    MDwarfC=MC[MC<MDLim]
+    XDwarfC=XC[MC<MDLim]
+    YDwarfC=YC[MC<MDLim]
+    ZDwarfC=ZC[MC<MDLim]
+    RvDwarfC=RvC[MC<MDLim]
     #print len(MDwarfG)
     #print("No of halos belove %.4g"%DHL,"is:")
     #print("Gadget:",len(MDwarfG))
@@ -121,28 +122,6 @@ if __name__ == "__main__":
     ZHC=ZHaloC[MMC_index]
     RvHC=RvHaloC[MMC_index]
     #let's plot these
-    fig = plt.figure(1)
-    fig.suptitle('CoSANG vs N-Body ')
-    ax11 = fig.add_subplot(221)
-    ax12 = fig.add_subplot(222)
-    ax13 = fig.add_subplot(223)
-    ax14 = fig.add_subplot(224)
-    ax11.set_xlabel('X')
-    ax11.set_ylabel('Y')
-    ax11.set_title('Dwarfs Distribution G')
-    ax12.set_xlabel('X')
-    ax12.set_ylabel('Y')
-    ax12.set_title('Dwarfs Distribution C')
-    ax13.set_xlabel('X')
-    ax13.set_ylabel('Z')
-    ax13.set_title('Dwarfs Distribution G')
-    ax14.set_xlabel('X')
-    ax14.set_ylabel('Z')
-    ax14.set_title('Dwarfs Distribution C')
-    ax11.plot(XHG,YHG,c='black', alpha=0.6, marker='.',s=RvHG)
-    ax12.plot(XHC,YHC,c='black', alpha=0.6, marker='.',s=RvHC)
-    ax13.plot(XHG,ZHG,c='black', alpha=0.6, marker='.',s=RvHG)
-    ax14.plot(XHC,ZHC,c='black', alpha=0.6, marker='.',s=RvHC)
     rHDwarfsG=np.sqrt((XDwarfG-XHG)**2.0+(YDwarfG-YHG)**2.0+(ZDwarfG-ZHG)**2.0)
     rHDwarfsC=np.sqrt((XDwarfC-XHC)**2.0+(YDwarfC-YHC)**2.0+(ZDwarfC-ZHC)**2.0)
     xg1=XDwarfG[rHDwarfsG<RvHG]
@@ -153,21 +132,44 @@ if __name__ == "__main__":
     yc1=YDwarfC[rHDwarfsC<RvHC]
     zc1=ZDwarfC[rHDwarfsC<RvHC]
     mc1=MDwarfC[rHDwarfsC<RvHC]
-    ax11.plot(xg1,yg1,c='red', alpha=0.8, marker='.',s=5)
-    ax12.plot(xc1,yc1,c='red', alpha=0.8, marker='.',s=5)
-    ax13.plot(xg1,zg1,c='red', alpha=0.8, marker='.',s=5)
-    ax14.plot(xc1,zc1,c='red', alpha=0.8, marker='.',s=5)
+    fig = plt.figure(1)
+    fig.suptitle('CoSANG vs N-Body ')
+    ax11 = fig.add_subplot(221)
+
+    ax11.set_xlabel('X')
+    ax11.set_ylabel('Y')
+    ax11.set_title('Dwarfs Distribution G')
+    ax11.scatter(XHG,YHG,c='black', alpha=0.6, marker='.',s=RvHG)
+    ax11.scatter(xg1,yg1,c='red', alpha=0.8, marker='.',s=5)
+    ax12 = fig.add_subplot(222)
+    ax12.set_xlabel('X')
+    ax12.set_ylabel('Y')
+    ax12.set_title('Dwarfs Distribution C')
+    ax12.scatter(XHC,YHC,c='black', alpha=0.6, marker='.',s=RvHC)
+    ax12.scatter(xc1,yc1,c='red', alpha=0.8, marker='.',s=5)
+    ax13 = fig.add_subplot(223)
+    ax13.set_xlabel('X')
+    ax13.set_ylabel('Z')
+    ax13.set_title('Dwarfs Distribution G')
+    ax13.scatter(XHG,ZHG,c='black', alpha=0.6, marker='.',s=RvHG)
+    ax13.scatter(xg1,zg1,c='red', alpha=0.8, marker='.',s=5)
+    ax14 = fig.add_subplot(224)
+    ax14.set_xlabel('X')
+    ax14.set_ylabel('Z')
+    ax14.set_title('Dwarfs Distribution C')
+    ax14.scatter(XHC,ZHC,c='black', alpha=0.6, marker='.',s=RvHC)
+    ax14.scatter(xc1,zc1,c='red', alpha=0.8, marker='.',s=5)
     #histogram of aboundances
     fig2 = plt.figure(2)
     fig2.suptitle('CoSANG vs N-Body ')
-    ax2 = fig.add_subplot(111)
+    ax2 = fig2.add_subplot(111)
     ax2.set_xlabel('$Log (M_{halo})$')
     ax2.set_ylabel('$N$')
     ax2.set_title('Dwarf Halos Mass aboundance')
     #ax1.plot(d1['star_age'],d1['center h1']) #plot of main data
     ax2.hist(np.log10(mg1),linewidth=2, bins=nbins, log=False, histtype='step', alpha=0.9,color='blue',label='Gadget')
     ax2.hist(np.log10(mc1),linewidth=2,bins=nbins,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
-    ax1.legend(loc=2)
+    ax2.legend(loc=2)
     #We are done with the most massive halo, now let's look at all massive halos
     plt.show()
 
