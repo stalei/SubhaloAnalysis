@@ -132,10 +132,13 @@ if __name__ == "__main__":
     yc1=YDwarfC[rHDwarfsC<RvHC]
     zc1=ZDwarfC[rHDwarfsC<RvHC]
     mc1=MDwarfC[rHDwarfsC<RvHC]
+    #print some info
+    print("No of the subhalos of the main halos:")
+    print("Gadget:",len(mg1))
+    print("CoSANG:",len(mc1))
     fig = plt.figure(1)
     fig.suptitle('CoSANG vs N-Body ')
     ax11 = fig.add_subplot(221)
-
     ax11.set_xlabel('X')
     ax11.set_ylabel('Y')
     ax11.set_title('Dwarfs Distribution G')
