@@ -69,8 +69,8 @@ if __name__ == "__main__":
     XC=XcAll[NumCAll>NLim]
     YC=YcAll[NumCAll>NLim]
     ZC=ZcAll[NumCAll>NLim]
-    RvG=RvGAll[NumGAll>NLim]
-    RvC=RvCAll[NumCAll>NLim]
+    RvG=(RvGAll[NumGAll>NLim])/1000.
+    RvC=(RvCAll[NumCAll>NLim])/1000.
     IDG=IDGAll[NumGAll>NLim]
     IDC=IDCAll[NumCAll>NLim]
     #Find target halos
@@ -139,26 +139,27 @@ if __name__ == "__main__":
     ax11.set_xlabel('X')
     ax11.set_ylabel('Y')
     ax11.set_title('Dwarfs Distribution G')
-    ax11.scatter(XHG,YHG,c='black', alpha=0.6, marker='.',s=RvHG)
-    ax11.scatter(xg1,yg1,c='red', alpha=0.8, marker='.',s=5)
+    #ax11.plot(XHG,YHG,'b+')
+    ax11.scatter(XHG,YHG,c='black', alpha=0.9, marker='+',s=40)#RvHG)
+    ax11.scatter(xg1,yg1,c='black', alpha=0.7, marker='o',s=15)
     ax12 = fig.add_subplot(222)
     ax12.set_xlabel('X')
     ax12.set_ylabel('Y')
     ax12.set_title('Dwarfs Distribution C')
-    ax12.scatter(XHC,YHC,c='black', alpha=0.6, marker='.',s=RvHC)
-    ax12.scatter(xc1,yc1,c='red', alpha=0.8, marker='.',s=5)
+    ax12.scatter(XHC,YHC,c='black', alpha=0.9, marker='+',s=40)#RvHC)
+    ax12.scatter(xc1,yc1,c='black', alpha=0.7, marker='o',s=15)
     ax13 = fig.add_subplot(223)
     ax13.set_xlabel('X')
     ax13.set_ylabel('Z')
     ax13.set_title('Dwarfs Distribution G')
-    ax13.scatter(XHG,ZHG,c='black', alpha=0.6, marker='.',s=RvHG)
-    ax13.scatter(xg1,zg1,c='red', alpha=0.8, marker='.',s=5)
+    ax13.scatter(XHG,ZHG,c='black', alpha=0.9, marker='+',s=40)#RvHG)
+    ax13.scatter(xg1,zg1,c='black', alpha=0.7, marker='o',s=15)
     ax14 = fig.add_subplot(224)
     ax14.set_xlabel('X')
     ax14.set_ylabel('Z')
     ax14.set_title('Dwarfs Distribution C')
-    ax14.scatter(XHC,ZHC,c='black', alpha=0.6, marker='.',s=RvHC)
-    ax14.scatter(xc1,zc1,c='red', alpha=0.8, marker='.',s=5)
+    ax14.scatter(XHC,ZHC,c='black', alpha=0.9, marker='+',s=40)#RvHC)
+    ax14.scatter(xc1,zc1,c='black', alpha=0.7, marker='o',s=15)
     #histogram of aboundances
     fig2 = plt.figure(2)
     fig2.suptitle('CoSANG vs N-Body ')
