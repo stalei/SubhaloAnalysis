@@ -124,14 +124,16 @@ if __name__ == "__main__":
     #let's plot these
     rHDwarfsG=np.sqrt((XDwarfG-XHG)**2.0+(YDwarfG-YHG)**2.0+(ZDwarfG-ZHG)**2.0)
     rHDwarfsC=np.sqrt((XDwarfC-XHC)**2.0+(YDwarfC-YHC)**2.0+(ZDwarfC-ZHC)**2.0)
-    xg1=XDwarfG[rHDwarfsG<RvHG]
-    yg1=YDwarfG[rHDwarfsG<RvHG]
-    zg1=ZDwarfG[rHDwarfsG<RvHG]
-    mg1=MDwarfG[rHDwarfsG<RvHG]
-    xc1=XDwarfC[rHDwarfsC<RvHC]
-    yc1=YDwarfC[rHDwarfsC<RvHC]
-    zc1=ZDwarfC[rHDwarfsC<RvHC]
-    mc1=MDwarfC[rHDwarfsC<RvHC]
+    rGlim=1.5*RvHG
+    rClim=1.5*RvHC
+    xg1=XDwarfG[rHDwarfsG<rGlim]
+    yg1=YDwarfG[rHDwarfsG<rGlim]
+    zg1=ZDwarfG[rHDwarfsG<rGlim]
+    mg1=MDwarfG[rHDwarfsG<rGlim]
+    xc1=XDwarfC[rHDwarfsC<rClim]
+    yc1=YDwarfC[rHDwarfsC<rClim]
+    zc1=ZDwarfC[rHDwarfsC<rClim]
+    mc1=MDwarfC[rHDwarfsC<rClim]
     #print some info
     print("No of the subhalos of the main halos:")
     print("Gadget:",len(mg1))
