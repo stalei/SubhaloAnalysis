@@ -124,8 +124,8 @@ if __name__ == "__main__":
     #let's plot these
     rHDwarfsG=np.sqrt((XDwarfG-XHG)**2.0+(YDwarfG-YHG)**2.0+(ZDwarfG-ZHG)**2.0)
     rHDwarfsC=np.sqrt((XDwarfC-XHC)**2.0+(YDwarfC-YHC)**2.0+(ZDwarfC-ZHC)**2.0)
-    rGlim=1.5*RvHG
-    rClim=1.5*RvHC
+    rGlim=1.2*RvHG
+    rClim=1.2*RvHC
     xg1=XDwarfG[rHDwarfsG<rGlim]
     yg1=YDwarfG[rHDwarfsG<rGlim]
     zg1=ZDwarfG[rHDwarfsG<rGlim]
@@ -134,6 +134,8 @@ if __name__ == "__main__":
     yc1=YDwarfC[rHDwarfsC<rClim]
     zc1=ZDwarfC[rHDwarfsC<rClim]
     mc1=MDwarfC[rHDwarfsC<rClim]
+    rg1=rHDwarfsG[rHDwarfsG<rGlim]
+    rc1=rHDwarfsC[rHDwarfsC<rClim]
     #print some info
     print("No of the subhalos of the main halos:")
     print("Gadget:",len(mg1))
@@ -168,14 +170,22 @@ if __name__ == "__main__":
     #histogram of aboundances
     fig2 = plt.figure(2)
     fig2.suptitle('CoSANG vs N-Body ')
-    ax2 = fig2.add_subplot(111)
-    ax2.set_xlabel('$Log (M_{halo})$')
-    ax2.set_ylabel('$N$')
-    ax2.set_title('Dwarf Halos Mass aboundance')
+    ax21 = fig2.add_subplot(121)
+    ax21.set_xlabel('$Log (M_{halo})$')
+    ax21.set_ylabel('$N$')
+    ax21.set_title('Dwarf Halos Mass aboundance')
     #ax1.plot(d1['star_age'],d1['center h1']) #plot of main data
-    ax2.hist(np.log10(mg1),linewidth=2, bins=nbins, log=False, histtype='step', alpha=0.9,color='blue',label='Gadget')
-    ax2.hist(np.log10(mc1),linewidth=2,bins=nbins,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
-    ax2.legend(loc=2)
+    ax21.hist(np.log10(mg1),linewidth=2, bins=nbins, log=False, histtype='step', alpha=0.9,color='blue',label='Gadget')
+    ax21.hist(np.log10(mc1),linewidth=2,bins=nbins,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
+    ax21.legend(loc=2)
+    ax22 = fig2.add_subplot(122)
+    ax22.set_xlabel('$r_{halo}[kpc]$')
+    ax22.set_ylabel('$N$')
+    ax22.set_title('Dwarf Halos Distance aboundance')
+    #ax1.plot(d1['star_age'],d1['center h1']) #plot of main data
+    ax22.hist(rg1*1000,linewidth=2, bins=nbins, log=False, histtype='step', alpha=0.9,color='blue',label='Gadget')
+    ax22.hist(rc1*1000,linewidth=2,bins=nbins,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
+    ax22.legend(loc=2)
     #We are done with the most massive halo, now let's look at all massive halos
     plt.show()
 
