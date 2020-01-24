@@ -121,11 +121,12 @@ if __name__ == "__main__":
     YHC=YHaloC[MMC_index]
     ZHC=ZHaloC[MMC_index]
     RvHC=RvHaloC[MMC_index]
+    print("Halo mass:%g"%MHaloG[MMG_index])
     #let's plot these
     rHDwarfsG=np.sqrt((XDwarfG-XHG)**2.0+(YDwarfG-YHG)**2.0+(ZDwarfG-ZHG)**2.0)
     rHDwarfsC=np.sqrt((XDwarfC-XHC)**2.0+(YDwarfC-YHC)**2.0+(ZDwarfC-ZHC)**2.0)
-    rGlim=1.2*RvHG
-    rClim=1.2*RvHC
+    rGlim=1.5*RvHG
+    rClim=1.5*RvHC
     xg1=XDwarfG[rHDwarfsG<rGlim]
     yg1=YDwarfG[rHDwarfsG<rGlim]
     zg1=ZDwarfG[rHDwarfsG<rGlim]
@@ -137,7 +138,7 @@ if __name__ == "__main__":
     rg1=rHDwarfsG[rHDwarfsG<rGlim]
     rc1=rHDwarfsC[rHDwarfsC<rClim]
     #print some info
-    print("No of the main halos:")
+    print("No of the sub halos:")
     print("Gadget:",len(mg1))
     print("CoSANG:",len(mc1))
     #now let's extract all info for all halos in the given range
@@ -146,18 +147,18 @@ if __name__ == "__main__":
     #rg=[None]*len(IDHaloG)
     for idg in IDHaloG:
         rg2=np.sqrt((XHaloG[IDHaloG==idg]-XDwarfG)**2.+(YHaloG[IDHaloG==idg]-YDwarfG)**2.+(ZHaloG[IDHaloG==idg]-ZDwarfG)**2. )
-        rG.extend(rg2[rg2<(RvHaloG[IDHaloG==idg]/1000.)])
+        rG.extend(rg2)#[rg2<(RvHaloG[IDHaloG==idg]/1000.)])
     rC=[]
     #rg=[None]*len(IDHaloG)
-    for idc in IDHaloC:
-        rc2=np.sqrt((XHaloC[IDHaloC==idc]-XDwarfC)**2.+(YHaloC[IDHaloC==idc]-YDwarfC)**2.+(ZHaloC[IDHaloC==idc]-ZDwarfC)**2. )
-        rC.extend(rc2[rc2<(RvHaloC[IDHaloC==idc]/1000.)])
+    #for idc in IDHaloC:
+    #    rc2=np.sqrt((XHaloC[IDHaloC==idc]-XDwarfC)**2.+(YHaloC[IDHaloC==idc]-YDwarfC)**2.+(ZHaloC[IDHaloC==idc]-ZDwarfC)**2. )
+    #    rC.extend(rc2)#[rc2<(RvHaloC[IDHaloC==idc]/1000.)])
     #
     #rGArray=np.array(rG)
     #rCArray=np.array(rC)
-    print(rG)
-    rG2=rG#[rGArray<0.2]
-    rC2=rC#Array[rCArray<0.2]
+    #print(rG)
+    #rG2=rG#[rGArray<0.2]
+    #rC2=rC#Array[rCArray<0.2]
     #plots
     fig = plt.figure(1)
     fig.suptitle('CoSANG vs N-Body ')
@@ -205,14 +206,14 @@ if __name__ == "__main__":
     ax22.hist(rg1*1000,linewidth=2, bins=nbins, log=False, histtype='step', alpha=0.9,color='blue',label='Gadget')
     ax22.hist(rc1*1000,linewidth=2,bins=nbins,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
     ax22.legend(loc=2)
-    fig3 = plt.figure(3)
-    ax3 = fig3.add_subplot(111)
-    ax3.set_xlabel('$r_{halo}[kpc]$')
-    ax3.set_ylabel('$N$')
-    ax3.set_title('Total Dwarf Halos Distance aboundance')
-    ax3.hist(rG2*1000,linewidth=2, bins=nbins2, log=False, histtype='step', alpha=0.9,color='blue',label='Gadget')
-    ax3.hist(rC2*1000,linewidth=2,bins=nbins2,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
-    ax3.legend(loc=2)
+    #fig3 = plt.figure(3)
+    #ax3 = fig3.add_subplot(111)
+    #ax3.set_xlabel('$r_{halo}[kpc]$')
+    #ax3.set_ylabel('$N$')
+    #ax3.set_title('Total Dwarf Halos Distance aboundance')
+    #ax3.hist(rG2*1000,linewidth=2, bins=nbins2, log=False, histtype='step', alpha=0.9,color='blue',label='Gadget')
+    #ax3.hist(rC2*1000,linewidth=2,bins=nbins2,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
+    #ax3.legend(loc=2)
     #We are done with the most massive halo, now let's look at all massive halos
     plt.show()
 
