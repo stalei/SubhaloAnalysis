@@ -13,7 +13,7 @@ import seaborn as sns
 from mpl_toolkits.mplot3d import Axes3D
 import argparse
 
-plt.rcParams["font.size"] =10
+plt.rcParams["font.size"] =12
 
 def PlotShpere(ax,R,xc,yc,zc):
 	u, v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     #rC2=rC#Array[rCArray<0.2]
     #plots
     fig = plt.figure(1)
-    fig.suptitle('CoSANG vs N-Body ')
+    #fig.suptitle('CoSANG vs N-Body ')
     ax11 = fig.add_subplot(221)
     ax11.set_xlabel('X')
     ax11.set_ylabel('Y')
@@ -189,14 +189,14 @@ if __name__ == "__main__":
     ax14.scatter(xc1,zc1,c='black', alpha=0.7, marker='o',s=15)
     #histogram of aboundances
     fig2 = plt.figure(2)
-    fig2.suptitle('CoSANG vs N-Body ')
+    #fig2.suptitle('CoSANG vs N-Body ')
     ax21 = fig2.add_subplot(211)
     ax21.set_xlabel('$Log (M_{halo})$')
     ax21.set_ylabel('$N$')
     ax21.set_title('Dwarf Halos Mass aboundance')
     #ax1.plot(d1['star_age'],d1['center h1']) #plot of main data
     ax21.hist(np.log10(mg1),linewidth=2, bins=nbins, log=False,cumulative=-1, histtype='step', alpha=0.9,color='blue',label='Gadget')
-    ax21.hist(np.log10(mc1),linewidth=2,bins=nbins,log=False, cumulative=-1, histtype='step', alpha=0.9,color='orange',label='CoSANG')
+    ax21.hist(np.log10(mc1),linewidth=2,bins=nbins,log=False, cumulative=-1, histtype='step', alpha=0.9,color='red',label='CoSANG')
     ax21.legend(loc=1)
     ax22 = fig2.add_subplot(212)
     ax22.set_xlabel('$r_{halo}[kpc]$')
@@ -204,7 +204,7 @@ if __name__ == "__main__":
     ax22.set_title('Dwarf Halos Distance aboundance')
     #ax1.plot(d1['star_age'],d1['center h1']) #plot of main data
     ax22.hist(rg1*1000,linewidth=2, bins=nbins, log=False,cumulative=True, histtype='step', alpha=0.9,color='blue',label='Gadget')
-    ax22.hist(rc1*1000,linewidth=2,bins=nbins,log=False,cumulative=True, histtype='step', alpha=0.9,color='orange',label='CoSANG')
+    ax22.hist(rc1*1000,linewidth=2,bins=nbins,log=False,cumulative=True, histtype='step', alpha=0.9,color='red',label='CoSANG')
     ax22.legend(loc=2)
     #fig3 = plt.figure(3)
     #ax3 = fig3.add_subplot(111)
