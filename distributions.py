@@ -24,8 +24,8 @@ def PlotShpere(ax,R,xc,yc,zc):
 	ax.plot_wireframe(x, y, z, color="gray",alpha=0.3)
 
 
-#how to run: python SelectHalo.py halo_catalog_1 halo_catalog_2 num_limit_for_dwarfs M_target_max M_target_min M_dwarf
-#example: $python distributions.py halos_0.0_G.ascii halos_0.0_C.ascii 250 1.3e12 1.1e12 1.0e8
+#how to run: python SelectHalo.py halo_catalog_1 halo_catalog_2 num_limit_for_dwarfs M_target_max M_target_min M_dwarf v_min
+#example: $python distributions.py halos_0.0_G.ascii halos_0.0_C.ascii 250 1.3e12 1.1e12 1.0e8 4
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -35,6 +35,7 @@ if __name__ == "__main__":
     parser.add_argument("M_highLim", type=float)
     parser.add_argument("M_lowLim", type=float)
     parser.add_argument("M_DwarfLim", type=float)
+    parser.add_argument("V_min", type=float)
     args = parser.parse_args()
     dg=np.genfromtxt(args.HaloCatalogG, skip_header=18)#,names=True, skip_header=5)
     dc=np.genfromtxt(args.HaloCatalogC,skip_header=18)#names=True, skip_header=5)
@@ -53,13 +54,16 @@ if __name__ == "__main__":
     ZcAll=np.array(dc[:,10])
     RvGAll=np.array(dg[:,4])
     RvCAll=np.array(dc[:,4])
+    VmaxGAll=np.array(dg[:,5])
+    VmaxCAll=np.array(dc[:,5])
     ## Criterias
     MHaloHigh=args.M_highLim
     MHaloLow=args.M_lowLim
     ProbeRadius=0.3 # kpc -> Mpc
     NLim=args.NumLimit
     MDLim=args.M_DwarfLim
-    nbins=30
+    V_min=args.V_min
+    nbins=60
     nbins2=60
     ## Mass Sample
     MG=MgAll[NumGAll>NLim]
@@ -74,6 +78,8 @@ if __name__ == "__main__":
     RvC=(RvCAll[NumCAll>NLim])/1000.
     IDG=IDGAll[NumGAll>NLim]
     IDC=IDCAll[NumCAll>NLim]
+    VmaxG=VmaxGAll[NumGAll>NLim]
+    VmaxC=VmaxCAll[NumCAll>NLim]
     #Find target halos
     IDHaloG=IDG[(MG>MHaloLow) & (MG<MHaloHigh)]
     MHaloG=MG[(MG>MHaloLow) & (MG<MHaloHigh)]
@@ -107,6 +113,24 @@ if __name__ == "__main__":
     YDwarfC=YC[MC<MDLim]
     ZDwarfC=ZC[MC<MDLim]
     RvDwarfC=RvC[MC<MDLim]
+    VmaxDwarfG=VmaxG[MG<MDLim]
+    VmaxDwarfC=VmaxC[MC<MDLim]
+    #################### v max limit
+    IDDwarfG=IDDwarfG[VmaxDwarfG>V_min]
+    MDwarfG=MDwarfG[VmaxDwarfG>V_min]
+    XDwarfG=XDwarfG[VmaxDwarfG>V_min]
+    YDwarfG=YDwarfG[VmaxDwarfG>V_min]
+    ZDwarfG=ZDwarfG[VmaxDwarfG>V_min]
+    RvDwarfG=RvDwarfG[VmaxDwarfG>V_min]
+    IDDwarfC=IDDwarfC[VmaxDwarfC>V_min]
+    MDwarfC=MDwarfC[VmaxDwarfC>V_min]
+    XDwarfC=XDwarfC[VmaxDwarfC>V_min]
+    YDwarfC=YDwarfC[VmaxDwarfC>V_min]
+    ZDwarfC=ZDwarfC[VmaxDwarfC>V_min]
+    RvDwarfC=RvDwarfC[VmaxDwarfC>V_min]#
+    VmaxDwarfG=VmaxDwarfG[VmaxDwarfG>V_min]
+    VmaxDwarfC=VmaxDwarfC[VmaxDwarfC>V_min]
+	####################
     #print len(MDwarfG)
     #print("No of halos belove %.4g"%DHL,"is:")
     #print("Gadget:",len(MDwarfG))
@@ -123,6 +147,7 @@ if __name__ == "__main__":
     ZHC=ZHaloC[MMC_index]
     RvHC=RvHaloC[MMC_index]
     print("Halo mass:%g"%MHaloG[MMG_index])
+    print("Halo ID:%g"%IDHaloC[MMC_index])
     #let's plot these
     rHDwarfsG=np.sqrt((XDwarfG-XHG)**2.0+(YDwarfG-YHG)**2.0+(ZDwarfG-ZHG)**2.0)
     rHDwarfsC=np.sqrt((XDwarfC-XHC)**2.0+(YDwarfC-YHC)**2.0+(ZDwarfC-ZHC)**2.0)
@@ -168,26 +193,26 @@ if __name__ == "__main__":
     ax11.set_ylabel('Y')
     ax11.set_title('Dwarfs Distribution G')
     #ax11.plot(XHG,YHG,'b+')
-    ax11.scatter(XHG,YHG,c='black', alpha=0.9, marker='+',s=50)#RvHG)
-    ax11.scatter(xg1,yg1,c='black', alpha=0.7, marker='o',s=15)
+    ax11.scatter(XHG,YHG,c='red', alpha=0.9, marker='+',s=50)#RvHG)
+    ax11.scatter(xg1,yg1,c='black', alpha=0.7, marker='.',s=15)
     ax12 = fig.add_subplot(222)
     ax12.set_xlabel('X')
     ax12.set_ylabel('Y')
     ax12.set_title('Dwarfs Distribution C')
-    ax12.scatter(XHC,YHC,c='black', alpha=0.9, marker='+',s=50)#RvHC)
-    ax12.scatter(xc1,yc1,c='black', alpha=0.7, marker='o',s=15)
+    ax12.scatter(XHC,YHC,c='red', alpha=0.9, marker='+',s=50)#RvHC)
+    ax12.scatter(xc1,yc1,c='black', alpha=0.7, marker='.',s=15)
     ax13 = fig.add_subplot(223)
     ax13.set_xlabel('X')
     ax13.set_ylabel('Z')
     ax13.set_title('Dwarfs Distribution G')
-    ax13.scatter(XHG,ZHG,c='black', alpha=0.9, marker='+',s=50)#RvHG)
-    ax13.scatter(xg1,zg1,c='black', alpha=0.7, marker='o',s=15)
+    ax13.scatter(XHG,ZHG,c='red', alpha=0.9, marker='+',s=50)#RvHG)
+    ax13.scatter(xg1,zg1,c='black', alpha=0.7, marker='.',s=15)
     ax14 = fig.add_subplot(224)
     ax14.set_xlabel('X')
     ax14.set_ylabel('Z')
     ax14.set_title('Dwarfs Distribution C')
-    ax14.scatter(XHC,ZHC,c='black', alpha=0.9, marker='+',s=50)#RvHC)
-    ax14.scatter(xc1,zc1,c='black', alpha=0.7, marker='o',s=15)
+    ax14.scatter(XHC,ZHC,c='red', alpha=0.9, marker='+',s=50)#RvHC)
+    ax14.scatter(xc1,zc1,c='black', alpha=0.7, marker='.',s=15)
     #histogram of aboundances
     fig2 = plt.figure(2,figsize=plt.figaspect(2))
     #fig2.suptitle('CoSANG vs N-Body ')
@@ -196,16 +221,16 @@ if __name__ == "__main__":
     ax21.set_ylabel('$N_M(>M)$')
     ax21.set_title('Dwarf Halos Mass abundance')
     #ax1.plot(d1['star_age'],d1['center h1']) #plot of main data
-    ax21.hist(np.log10(mg1),linewidth=2, bins=nbins, log=False,cumulative=-1, histtype='step', alpha=0.9,color='blue',label='Gadget')
-    ax21.hist(np.log10(mc1),linewidth=2,bins=nbins,log=False, cumulative=-1, histtype='step', alpha=0.9,color='red',label='CoSANG')
+    ax21.hist(np.log10(mg1),linewidth=2, bins=nbins, log=True,cumulative=-1, histtype='step', alpha=0.9,color='blue',label='Gadget')
+    ax21.hist(np.log10(mc1),linewidth=2,bins=nbins,log=True, cumulative=-1, histtype='step', alpha=0.9,color='red',label='CoSANG')
     ax21.legend(loc=1)
     ax22 = fig2.add_subplot(212)
     ax22.set_xlabel('$r_{halo}[kpc]$')
     ax22.set_ylabel('$N_r(<d)$')
     ax22.set_title('Dwarf Halos Distance abundance')
     #ax1.plot(d1['star_age'],d1['center h1']) #plot of main data
-    ax22.hist(rg1*1000,linewidth=2, bins=nbins, log=False,cumulative=True, histtype='step', alpha=0.9,color='blue',label='Gadget')
-    ax22.hist(rc1*1000,linewidth=2,bins=nbins,log=False,cumulative=True, histtype='step', alpha=0.9,color='red',label='CoSANG')
+    ax22.hist(rg1*1000,linewidth=2, bins=nbins, log=True,cumulative=True, histtype='step', alpha=0.9,color='blue',label='Gadget')
+    ax22.hist(rc1*1000,linewidth=2,bins=nbins,log=True,cumulative=True, histtype='step', alpha=0.9,color='red',label='CoSANG')
     ax22.legend(loc=2)
     #fig3 = plt.figure(3)
     #ax3 = fig3.add_subplot(111)
