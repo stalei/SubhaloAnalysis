@@ -148,11 +148,12 @@ if __name__ == "__main__":
     RvHC=RvHaloC[MMC_index]
     print("Halo mass:%g"%MHaloG[MMG_index])
     print("Halo ID:%g"%IDHaloC[MMC_index])
+    print("Halo pos:%g,%g,%g"%(XHaloC,YHaloC,ZHaloC))
     #let's plot these
     rHDwarfsG=np.sqrt((XDwarfG-XHG)**2.0+(YDwarfG-YHG)**2.0+(ZDwarfG-ZHG)**2.0)
     rHDwarfsC=np.sqrt((XDwarfC-XHC)**2.0+(YDwarfC-YHC)**2.0+(ZDwarfC-ZHC)**2.0)
-    rGlim=1.0*RvHG
-    rClim=1.0*RvHC
+    rGlim=0.7*RvHG
+    rClim=0.7*RvHC
     xg1=XDwarfG[rHDwarfsG<rGlim]
     yg1=YDwarfG[rHDwarfsG<rGlim]
     zg1=ZDwarfG[rHDwarfsG<rGlim]
@@ -241,6 +242,13 @@ if __name__ == "__main__":
     #ax3.hist(rC2*1000,linewidth=2,bins=nbins2,log=False, histtype='step', alpha=0.9,color='green',label='CoSANG')
     #ax3.legend(loc=2)
     #We are done with the most massive halo, now let's look at all massive halos
+    fig3 = plt.figure(3,figsize=plt.figaspect(0.5))
+    ax31=fig3.add_subplot(121) #log log + cumulative top down
+    ax31.hist(np.log10(VmaxDwarfG),linewidth=2, bins=nbins, log=True,cumulative=False, histtype='step', alpha=0.9,color='blue',label='Gadget')
+    ax31.hist(np.log10(VmaxDwarfC),linewidth=2, bins=nbins, log=True,cumulative=False, histtype='step', alpha=0.9,color='red',label='CoSANG')
+    ax32=fig3.add_subplot(122)
+    ax32.hist(np.log10(VmaxDwarfG),linewidth=2, bins=nbins, log=True,cumulative=True, histtype='step', alpha=0.9,color='blue',label='Gadget')
+    ax32.hist(np.log10(VmaxDwarfC),linewidth=2, bins=nbins, log=True,cumulative=True, histtype='step', alpha=0.9,color='red',label='CoSANG')
     plt.show()
 
 
